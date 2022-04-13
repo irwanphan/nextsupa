@@ -3,6 +3,8 @@ import Layout from '@/components/Layout'
 
 import { PrismaClient } from '@prisma/client';
 
+import { useRouter } from 'next/router';
+
 // Instantiate Prisma Client
 const prisma = new PrismaClient();
                                      
@@ -15,7 +17,9 @@ export async function getStaticPaths() {
         paths: homes.map(home => ({
             params: { id: home.id },
         })),
-        fallback: false,
+        // set false to not accept any lazy build
+        // true for incremental static generation / lazy build
+        fallback: true,
     }
 }                               
 export async function getStaticProps({ params }) {
@@ -37,6 +41,13 @@ export async function getStaticProps({ params }) {
 }
 
 const ListedHome = (home = null) => {
+    const router = useRouter()
+
+    // fallback version
+    if (router.isFallback) {
+        return 'loading...'
+    }
+
     return (
         <Layout>
             <div className="max-w-screen-lg mx-auto">
