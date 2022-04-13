@@ -9,6 +9,15 @@ const supabase = createClient(
     process.env.SUPABASE_KEY
 )
 
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '10mb',
+        },
+    },
+};
+  
+
 export default async function handler(req, res) {
     // Upload image to Supabase
     if (req.method === 'POST') {
